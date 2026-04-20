@@ -17,7 +17,7 @@ import { postTransaction, AssetClass, TransactionType } from '../api/transaction
 import { useTheme } from '../hooks/useTheme';
 import { Colors } from '../theme/colors';
 
-const USER_ID = 1;
+const USER_ID = 2;
 
 interface Props {
   visible: boolean;

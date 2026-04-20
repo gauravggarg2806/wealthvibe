@@ -11,7 +11,7 @@ import { fetchInsights, Alert, InsightsResponse } from '../api/insights';
 import { useTheme } from '../hooks/useTheme';
 import { Colors } from '../theme/colors';
 
-const USER_ID = 1;
+const USER_ID = 2;
 
 // ---------------------------------------------------------------------------
 // Mock data

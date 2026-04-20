@@ -13,7 +13,7 @@ import ErrorState from '../components/ErrorState';
 import { useTheme } from '../hooks/useTheme';
 import { Colors } from '../theme/colors';
 
-const USER_ID = 1;
+const USER_ID = 2;
 
 function formatCurrency(value: number): string {
   if (value >= 10_000_000) return `₹${(value / 10_000_000).toFixed(2)} Cr`;

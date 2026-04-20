@@ -18,7 +18,7 @@ import NewTransactionModal from '../components/NewTransactionModal';
 import { AssetsSkeleton } from '../components/SkeletonLoader';
 import ErrorState from '../components/ErrorState';
 
-const USER_ID = 1;
+const USER_ID = 2;
 
 const MOCK_ASSETS: AssetItem[] = [
   {
