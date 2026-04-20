@@ -50,8 +50,8 @@ const MOCK_ASSETS: AssetItem[] = [
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-function fmt(v: number, prefix = '$') {
-  return `${prefix}${Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+function fmt(v: number, prefix = '₹') {
+  return `${prefix}${Math.abs(v).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 function classColor(ac: AssetItem['asset_class']): string {

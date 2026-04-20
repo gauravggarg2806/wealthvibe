@@ -32,6 +32,34 @@ def get_latest_price(ticker: str) -> float:
     return float(hist["Close"].dropna().iloc[-1].item())
 
 
+def get_usd_to_inr() -> float:
+    """Fetch live USD→INR rate. Falls back to 84.0 if unavailable."""
+    try:
+        hist = yf.download("USDINR=X", period="2d", interval="1d", auto_adjust=True, progress=False)
+        if not hist.empty:
+            return float(hist["Close"].dropna().iloc[-1].item())
+    except Exception:
+        pass
+    return 84.0
+
+
+# Cache the rate per process lifetime to avoid repeated fetches within one request cycle
+_fx_cache: dict[str, float] = {}
+
+def get_price_in_inr(ticker: str) -> float:
+    """
+    Return latest price in INR.
+    Indian tickers (ending in .NS or .BO) are already in INR.
+    All others are assumed USD and converted using live USDINR rate.
+    """
+    price = get_latest_price(ticker)
+    if ticker.upper().endswith((".NS", ".BO")):
+        return price
+    if "USDINR" not in _fx_cache:
+        _fx_cache["USDINR"] = get_usd_to_inr()
+    return price * _fx_cache["USDINR"]
+
+
 # ---------------------------------------------------------------------------
 # 2. Total holding value
 # ---------------------------------------------------------------------------
@@ -66,16 +94,30 @@ def calculate_total_value(
 
     net_qty = max(net_qty, 0.0)
     avg_cost = (total_cost / net_qty) if net_qty > 0 else 0.0
-    current_price = get_latest_price(ticker)
-    total_value = net_qty * current_price
-    unrealised_pnl = total_value - (net_qty * avg_cost)
+
+    # Current price in INR (USD tickers auto-converted via live FX rate)
+    current_price_inr = get_price_in_inr(ticker)
+
+    # avg_cost stored in the DB is in the currency the user entered (assumed INR already,
+    # or if user entered USD prices we convert so both sides match)
+    is_inr_ticker = ticker.upper().endswith((".NS", ".BO"))
+    if not is_inr_ticker:
+        fx = _fx_cache.get("USDINR") or get_usd_to_inr()
+        _fx_cache["USDINR"] = fx
+        avg_cost_inr = avg_cost * fx
+    else:
+        avg_cost_inr = avg_cost
+
+    total_value = net_qty * current_price_inr
+    unrealised_pnl = total_value - (net_qty * avg_cost_inr)
 
     return {
         "net_quantity": round(net_qty, 4),
-        "avg_cost": round(avg_cost, 4),
-        "current_price": round(current_price, 4),
+        "avg_cost": round(avg_cost_inr, 4),
+        "current_price": round(current_price_inr, 4),
         "total_value": round(total_value, 4),
         "unrealised_pnl": round(unrealised_pnl, 4),
+        "currency": "INR",
     }
 
 

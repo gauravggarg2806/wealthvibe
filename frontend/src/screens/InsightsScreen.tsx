@@ -37,8 +37,8 @@ const MOCK: InsightsResponse = {
       ticker: 'INTC',
       asset_name: 'Intel Corp.',
       message: "INTC is trading 31.5% below your average cost (₹68.50 vs avg ₹100.00). Consider harvesting this loss to offset capital gains.",
-      avg_buy_price: 100.0,
-      current_price: 68.5,
+      avg_buy_price: 8400.0,
+      current_price: 5754.0,
       loss_pct: 31.5,
       unrealised_loss: -1575,
     },
@@ -141,9 +141,9 @@ function AlertCard({ alert, theme }: { alert: Alert; theme: ReturnType<typeof us
 
       {alert.alert_type === 'tax_loss_harvesting' && alert.loss_pct != null && (
         <View style={[styles.metricsRow, { backgroundColor: theme.bg }]}>
-          <Metric label="Avg Cost" value={`$${alert.avg_buy_price?.toFixed(2)}`} />
+          <Metric label="Avg Cost" value={`₹${alert.avg_buy_price?.toFixed(2)}`} />
           <View style={[styles.divider, { backgroundColor: theme.border }]} />
-          <Metric label="Current" value={`$${alert.current_price?.toFixed(2)}`} />
+          <Metric label="Current" value={`₹${alert.current_price?.toFixed(2)}`} />
           <View style={[styles.divider, { backgroundColor: theme.border }]} />
           <Metric label="Loss" value={`-${alert.loss_pct?.toFixed(1)}%`} color={Colors.danger} />
         </View>

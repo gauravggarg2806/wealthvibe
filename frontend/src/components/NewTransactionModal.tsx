@@ -256,7 +256,7 @@ export default function NewTransactionModal({ visible, onClose, onSuccess }: Pro
               <View style={[fStyles.totalPreview, { backgroundColor: activeClassColor + '15', borderColor: activeClassColor + '40' }]}>
                 <Text style={[fStyles.totalLabel, { color: theme.textSecondary }]}>Total Value</Text>
                 <Text style={[fStyles.totalValue, { color: activeClassColor }]}>
-                  ${(Number(quantity) * Number(price)).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  ₹{(Number(quantity) * Number(price)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                 </Text>
               </View>
             )}
